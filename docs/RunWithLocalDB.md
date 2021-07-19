@@ -1,17 +1,19 @@
 # Running the example with a local DB
 
-The K8s examples for the course used a host database for testing. This file describes how to use a local Docker database to do the same. 
+The K8s examples for the course used a hosted database for testing.
+
+This file describes how to use a local Docker database to do the same. 
 
 This example was tested on a Linux server running a local cluster. It has not been tested anywhere else. 
 
 These steps pickup in the CONTAINERS AND KUBERNETES section of the course after completing the Defining our K8s Deployment.
 
 
-## Pre Run Steps:
+## Prerequisite Steps
 
-1. If you are still running the docker-compose example - then you will need to stop it. (If you don't then you may run into issues with conflicting ports.) Type: <Ctrl><c> in the window where it is running. This should stop the services.
+1. If you are still running the docker-compose example - then you will need to stop it. (If you don't then you may run into issues with conflicting ports.) To stop it type: '<Ctrl><c>' in the window where it is running. 
 
-2. You may need to clean up your docker environment to remove stopped containers. (Again, if you don't you may run into issues with conflicting container names.) To see the containers you can use: `docker ps -a`. Look for containers with the name "comments-api" and remove them by hand by using the `docker rm` command and their container id. For example: 
+2. You may need to clean up your docker environment to remove stopped containers. (If you don't you may run into issues with conflicting container names.) To see the containers you can use: `docker ps -a`. Look for containers with the name "comments-api" and remove them by hand by using the `docker rm` command and their container id. For example: 
 
     ```
     [bgercken@sparta go-rest-api]$ docker ps -a
@@ -30,7 +32,9 @@ These steps pickup in the CONTAINERS AND KUBERNETES section of the course after 
     48a1b9c2c72a
     ```
 
-3. For this example I opened the port 8080 in my firewall to allow connections from the outside. On Linux you can use the following (depending on your version).
+3. For this example I opened TCP port 8080 in my firewall to allow connections from the outside.
+
+    On Linux you can use the following (depending on your version).
 
     As root:
     ```
@@ -38,9 +42,15 @@ These steps pickup in the CONTAINERS AND KUBERNETES section of the course after 
     firewall-cmd --reload
     ```
 
+4. We need to revert the `sslmode=required` change (shown around minute 7:15 of the video on `Defining our K8s Deployment`. Change: `sslmode to disable`.
+
+5. Rebuild your container and tag it for your docker repository. `docker build -t mydockerhubname:/comments-api:latest .` 
+
+6. Push the container to your repository: `docker push mydockerhubname:/comments-api:latest`.
+
 ## DB Setup and Statup Steps:
 
-1. Create a script for starting the database. We are assuming this is a fresh start - so a docker volume will be created to stor the database the first time that the script is executed. The database will be created the first time you deploy the pods.
+1. Create a script for starting the database. We are assuming this is a fresh start - so a docker volume will be created to store the database the first time that the script is executed. The database will be created the first time you deploy the pods.
 
     ```
     cat > run-db.sh << EOF
@@ -56,7 +66,7 @@ These steps pickup in the CONTAINERS AND KUBERNETES section of the course after 
     EOF
     ```
 
-2. Create an environment file (like in the examples substituting your choice for values) and your IP address.
+2. Create an environment file (as shown in the course substituting your choice for values) and your IP address.
 
     ```
     cat > ENV.sh << EOF
