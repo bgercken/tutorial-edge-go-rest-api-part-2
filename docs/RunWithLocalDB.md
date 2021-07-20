@@ -17,7 +17,7 @@ The steps fit into the course around the CONTAINERS AND KUBERNETES section after
 
     To see the stopped containers you can use: `docker ps -a`.
 
-    Look for containers with the name "comments-api" and remove them by hand by using the `docker rm` command and the containers ID. For example: 
+    Look for containers with names that contain "comments" and remove them by hand by using the `docker rm` command and the containers ID. For example: 
 
     ```
     [bgercken@sparta go-rest-api]$ docker ps -a
@@ -53,7 +53,7 @@ The steps fit into the course around the CONTAINERS AND KUBERNETES section after
 
 5. Rebuild your container and tag it for your docker repository. Example: `docker build -t myname/comments-api:latest .` 
 
-6. Finally, ush the container to your repository. Example: `docker push myname/comments-api:latest`.
+6. Finally, push the container to your repository. Example: `docker push myname/comments-api:latest`.
 
 ## Database Setup and Startup Steps:
 
@@ -133,11 +133,9 @@ The steps fit into the course around the CONTAINERS AND KUBERNETES section after
     ```
 
 
-**Note:** In step 4 you are exposing the application to hosts outside of the local host.
+**Note:** 
 
-      I did this to facilitate testing from within my network (so that I can use postman).
-
-      Be aware that other people can access your API and do not do this in production unless it is something that you specifically want to do. (You probably won't be using `kubectl port-forward ...` in production anyway. :-)
+1. In step 4 you are exposing the application to hosts outside of the local host. I did this to facilitate testing from within my network (so that I can use postman). Be aware that other people can access your API and do not do this in production unless it is something that you specifically want to do. (You probably won't be using `kubectl port-forward ...` in production anyway. :-)
 
 
 
