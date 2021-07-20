@@ -132,6 +132,16 @@ The steps fit into the course around the CONTAINERS AND KUBERNETES section after
     kubectl port-forward --address 0.0.0.0 service/comments-api 8080:8080
     ```
 
+## Post Testing Steps
+
+After you are done testing your application you will want to stop the postgres database so that it will not conflict with the docker-compose testing in up comming lessons. (Logging with Logrus uses docker-compose.)
+
+1. Type: `docker stop comments-api-db`.
+
+2. Type: `docker rm comments-api-db`.
+
+This will remove the container create by the `run-db.sh` script.
+
 
 **Note:** 
 
