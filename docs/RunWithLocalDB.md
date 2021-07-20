@@ -49,7 +49,7 @@ The steps fit into the course around the CONTAINERS AND KUBERNETES section after
 4. Next, we need to revert the `sslmode=required` change made to the `internal/database/databases.go` connectionString. 
     (This was shown around minute 7:15 of the video on `Defining our K8s Deployment`.)
 
-    Change: `sslmode=require` backto `sslmode=disable`.
+    Change: `sslmode=require` back to `sslmode=disable`.
 
 5. Rebuild your container and tag it for your docker repository. Example: `docker build -t myname/comments-api:latest .` 
 
