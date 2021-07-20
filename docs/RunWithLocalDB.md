@@ -1,12 +1,12 @@
-# Running the example with a local DB
+# How to run the K8s example with a local Docker Database
 
-The K8s examples for the course use a hosted database for testing.
+The K8s example for the course uses a hosted database for testing.
 
-This file describes how to use a local Docker database to do the same. 
+This README describes how to use a local Docker database to do the same. 
 
 This example was tested on a Linux server running a local cluster. It has not been tested anywhere else. 
 
-These steps pickup in the CONTAINERS AND KUBERNETES section of the course after completing the Defining our K8s Deployment video.
+The steps fit into the course around the CONTAINERS AND KUBERNETES section after completing the "Defining our K8s Deployment" video.
 
 
 ## Prerequisite Steps
@@ -36,9 +36,9 @@ These steps pickup in the CONTAINERS AND KUBERNETES section of the course after 
     48a1b9c2c72a
     ```
 
-3. For this example I had to open TCP port 8080 in my firewall to allow connections from the outside.
+3. For testing I had to open port 8080/tcp in my firewall to allow connections from the outside. I did this to facilitate remote testing.
 
-    On Linux you can use the following (depending on your version).
+    Firewalls vary by Linux distribution and version. For my OS I used the following commands.
 
     As root:
     ```
@@ -46,15 +46,38 @@ These steps pickup in the CONTAINERS AND KUBERNETES section of the course after 
     firewall-cmd --reload
     ```
 
-4. We need to revert the `sslmode=required` change (shown around minute 7:15 of the video on `Defining our K8s Deployment`. Change: `sslmode to disable`.
+4. Next, we need to revert the `sslmode=required` change made to the `internal/database/databases.go` connectionString. 
+    (This was shown around minute 7:15 of the video on `Defining our K8s Deployment`.)
 
-5. Rebuild your container and tag it for your docker repository. `docker build -t myname/comments-api:latest .` 
+    Change: `sslmode=require` backto `sslmode=disable`.
 
-6. Push the container to your repository: `docker push myname/comments-api:latest`.
+5. Rebuild your container and tag it for your docker repository. Example: `docker build -t myname/comments-api:latest .` 
 
-## DB Setup and Startup Steps:
+6. Finally, ush the container to your repository. Example: `docker push myname/comments-api:latest`.
 
-1. Create a script for starting the database. We are assuming this is a fresh start - so a docker volume will be created to store the database the first time that the script is executed. The database will be created the first time you deploy the pods.
+## Database Setup and Startup Steps:
+
+1. Create an environment file (as shown in the course substituting values of your choice and your IP address).
+
+    Example:
+
+    ```
+    cat > ENV.sh << EOF
+    export DB_USERNAME=postgres
+    export DB_PASSWORD=postgres
+    export DB_HOST=192.168.0.100
+    export DB_TABLE=postgres
+    export DB_PORT=5432
+    EOF
+    ```
+
+2. Create a script for starting the database. 
+
+    We are assuming this is a fresh start - so a docker volume will be created to store the database the first time that the script is executed.
+
+    The database will be created the first time you deploy the pods.
+
+    Example:
 
     ```
     cat > run-db.sh << EOF
@@ -70,30 +93,22 @@ These steps pickup in the CONTAINERS AND KUBERNETES section of the course after 
     EOF
     ```
 
-2. Create an environment file (as shown in the course substituting your choice for values) and your IP address.
-
-    ```
-    cat > ENV.sh << EOF
-    export DB_USERNAME=postgres
-    export DB_PASSWORD=postgres
-    export DB_HOST=192.168.0.100
-    export DB_TABLE=postgres
-    export DB_PORT=5432
-    EOF
-    ```
-
-3. Change the permissions on the database script to make it executable. `chmod +x run_db.sh`
+3. Update the permissions on the database script to make it executable. Example: `chmod +x run_db.sh`
 
 
 4. Start the database. 
+
+    Example:
 
     ```
     ./run_db.sh
     ```
 
-## Now follow the steps to deploy the application
+## Application Startup Steps
 
-1. Create a script to run the application:
+1. Create a script to run the application.
+
+    Example:
 
     ```
     cat > deploy_app.sh << EOF
@@ -103,7 +118,7 @@ These steps pickup in the CONTAINERS AND KUBERNETES section of the course after 
     envsubst < config/deployment.yaml | kubectl apply -f -
     EOF
 
-2. Change the permissions on the deploy script to make it executable. `chmod +x deploy_app.sh`
+2. Update the permissions on the deploy script to make it executable. `chmod +x deploy_app.sh`
 
 3. Start the application.
 
@@ -118,7 +133,11 @@ These steps pickup in the CONTAINERS AND KUBERNETES section of the course after 
     ```
 
 
-**Note:** In step 4 you are exposing the application to hosts outside of the local host. I did this to facilitate testing from within my network (so that I can use postman). Be aware that other people can access your API and do not do this in production unless it is something that you specifically want to do. (You probably won't be using `kubectl port-forward ...` in production anyway. :-)
+**Note:** In step 4 you are exposing the application to hosts outside of the local host.
+
+      I did this to facilitate testing from within my network (so that I can use postman).
+
+      Be aware that other people can access your API and do not do this in production unless it is something that you specifically want to do. (You probably won't be using `kubectl port-forward ...` in production anyway. :-)
 
 
 
