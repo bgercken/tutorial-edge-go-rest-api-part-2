@@ -10,7 +10,7 @@ The steps fit into the course around the CONTAINERS AND KUBERNETES section after
 
 ---
 
-### TLDR - 
+### TLDR
 
 The quick description is that you can use the existing docker-compose approach to start the database (from the earlier examples) and then modify the service to use a different port (so that it does not conflict with the docker-compose app container that is running).
 
