@@ -9,6 +9,76 @@ This example was tested on a Linux server running a local cluster. It has not be
 The steps fit into the course around the CONTAINERS AND KUBERNETES section after completing the "Defining our K8s Deployment" video.
 
 
+# THIS WAS THE ORIGINAL VERSION - THERE IS AN EASIER WAY
+
+The steps below are a lot of work. There is an easier way that I will document shortly. 
+
+The quick description is that you can use the existing docker-compose approach to start the database (from the earlier examples) and then modify the deployment and the service to use a different port (so that it does not conflict with the docker-compose app that is running). All you have to do is change the container source port. Here I used 8888. (If you are behind a firewall you MAY need to open port 8888/tcp for testing.)
+
+The deployment looks like:
+
+```
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: comments-api
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      name: comments-api
+  template:
+    metadata:
+      labels:
+        name: comments-api
+    spec:
+      containers:
+      - name: application
+        image: "bgercken/comments-api:latest"
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 8888
+        env:
+          - name: DB_PORT
+            value: "$DB_PORT"
+          - name: DB_HOST
+            value: "$DB_HOST"
+          - name: DB_PASSWORD
+            value: "$DB_PASSWORD"
+          - name: DB_TABLE
+            value: "$DB_TABLE"
+          - name: DB_USERNAME
+            value: "$DB_USERNAME"
+          - name: SSL_MODE
+            value: "disable"
+```
+
+And the service looks like:
+
+```
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: comments-api2
+spec:
+  type: NodePort
+  selector:
+    name: comments-api
+  ports:
+  - protocol: TCP
+    port: 8888
+    targetPort: 8080
+```
+
+
+
 ## Prerequisite Steps
 
 1. If you are still running the docker-compose example - then you will need to stop it. (If you don't then you may run into issues with conflicting ports.) To stop it type: `<Ctrl><c>` in the window where it is running. 
