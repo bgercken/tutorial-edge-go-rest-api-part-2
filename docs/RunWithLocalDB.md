@@ -8,16 +8,19 @@ This example was tested on a Linux server running a local cluster. It has not be
 
 The steps fit into the course around the CONTAINERS AND KUBERNETES section after completing the "Defining our K8s Deployment" video.
 
+---
 
-# THIS WAS THE ORIGINAL VERSION - THERE IS AN EASIER WAY
+## This is a simplified approach. The original apporach is further below.
 
-The original steps below (after this section) are a lot of work.
+The original steps below are a lot of work. This is the easiest approach.
 
-There is an easier way.
+### TLDR - 
 
 The quick description is that you can use the existing docker-compose approach to start the database (from the earlier examples) and then modify the deployment and the service to use a different port (so that it does not conflict with the docker-compose app that is running).
 
-All that needs to be changes is the container's source port.
+### Description
+
+All that needs to be changed is the container's source port.
 
 In this example I used port `8888`.
 
