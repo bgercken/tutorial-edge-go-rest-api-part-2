@@ -79,7 +79,7 @@ The one change to the normal instructions is that we are setting the DB_HOST to 
     ```
  
 
-At this point you should be able to deploy the application to the cluster and test the interface per the examples substituting port `8080` with `8888`.
+At this point you should be able to test the interface per the examples substituting port `8080` with `8888`.
 
 For example:
 
