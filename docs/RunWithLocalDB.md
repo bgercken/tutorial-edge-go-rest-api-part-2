@@ -11,9 +11,20 @@ The steps fit into the course around the CONTAINERS AND KUBERNETES section after
 
 # THIS WAS THE ORIGINAL VERSION - THERE IS AN EASIER WAY
 
-The steps below are a lot of work. There is an easier way that I will document shortly. 
+The original steps below (after this section) are a lot of work.
 
-The quick description is that you can use the existing docker-compose approach to start the database (from the earlier examples) and then modify the deployment and the service to use a different port (so that it does not conflict with the docker-compose app that is running). All you have to do is change the container source port. Here I used 8888. (If you are behind a firewall you MAY need to open port 8888/tcp for testing.)
+There is an easier way.
+
+The quick description is that you can use the existing docker-compose approach to start the database (from the earlier examples) and then modify the deployment and the service to use a different port (so that it does not conflict with the docker-compose app that is running).
+
+All that needs to be changes is the container's source port.
+
+In this example I used port `8888`.
+
+Note that you may need to open the port in your firewall if your are testing externally. This does not apply to everyone.
+
+
+In the `config/deployment.yaml` file change the `containerPort` to `8888`.
 
 The deployment looks like:
 
@@ -59,7 +70,9 @@ spec:
             value: "disable"
 ```
 
-And the service looks like:
+In the `config/service.yaml` file change the `port` to `8888`. The `targetPort` stays the same (8080).
+
+The service file looks like:
 
 ```
 ---
@@ -77,7 +90,9 @@ spec:
     targetPort: 8080
 ```
 
+---
 
+# Orignal Steps
 
 ## Prerequisite Steps
 
