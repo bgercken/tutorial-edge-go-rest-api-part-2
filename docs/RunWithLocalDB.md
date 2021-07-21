@@ -57,6 +57,28 @@ This can be done in 3 easy steps.
 
 ## Run the API
 
+
+Deploy the application to the cluster as per the tutorial.
+
+1. Set the environment variables.
+
+```
+export DB_USERNAME=postgres
+export DB_PASSWORD=postgres
+export DB_HOST=192.168.0.100
+export DB_TABLE=postgres
+export DB_PORT=5432
+```
+
+The one change to the normal instructions is that we are setting the DB_HOST to the IP address of the local host so that it will route database traffic from the cluster to the host.
+
+2. Deploy the application.
+
+    ```
+    envsubst < config/deployment.yaml | kubectl apply -f -
+    ```
+ 
+
 At this point you should be able to deploy the application to the cluster and test the interface per the examples substituting port `8080` with `8888`.
 
 For example:
